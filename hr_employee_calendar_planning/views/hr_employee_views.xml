@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!-- Copyright 2019 Tecnativa - Pedro M. Baeza
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr.view_employee_form" />
         <!-- It is necessary to set a high priority to avoid that if hr_contract
         is installed later, the calendar is still hidden. !-->
-        <field name="priority">99</field>
+        <field name="priority" eval="99" />
         <field name="arch" type="xml">
             <field name="resource_calendar_id" position="attributes">
                 <attribute name="invisible">1</attribute>

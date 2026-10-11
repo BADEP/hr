@@ -566,15 +566,17 @@ class TestHrEmployeeCalendarPlanning(TestHrEmployeeCalendarPlanningCommon):
     def test_employee_copy_exception_coverage(self):
         from unittest.mock import patch
 
-        with patch.object(
-            type(self.employee),
-            "copy",
-            side_effect=IntegrityError(
-                "duplicate key value violates unique constraint"
+        with (
+            patch.object(
+                type(self.employee),
+                "copy",
+                side_effect=IntegrityError(
+                    "duplicate key value violates unique constraint"
+                ),
             ),
+            self.assertRaises(unittest.SkipTest),
         ):
-            with self.assertRaises(unittest.SkipTest):
-                self.test_employee_copy()
+            self.test_employee_copy()
 
     @mute_logger("odoo.models.unlink")
     def test_user_action_create_employee(self):

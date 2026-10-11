@@ -50,8 +50,10 @@ class HrEmployee(models.Model):
         # The fields “calendar_ids”, which you are trying to read, are not
         # available for employee public profiles.
         return self.sudo().calendar_ids.filtered(
-            lambda x: (not x.date_start or (from_date and x.date_start <= from_date))
-            and (not x.date_end or (to_date and x.date_end >= to_date))
+            lambda x: (
+                (not x.date_start or (from_date and x.date_start <= from_date))
+                and (not x.date_end or (to_date and x.date_end >= to_date))
+            )
         )
 
     @api.model
@@ -158,9 +160,11 @@ class HrEmployee(models.Model):
             if planned_line:
                 best_line = sorted(
                     planned_line,
-                    key=lambda c: (c.date_end - c.date_start).days
-                    if c.date_start and c.date_end
-                    else 9999,
+                    key=lambda c: (
+                        (c.date_end - c.date_start).days
+                        if c.date_start and c.date_end
+                        else 9999
+                    ),
                 )[0]
                 calendar = best_line.calendar_id
         res = super()._get_work_days_data_batch(
