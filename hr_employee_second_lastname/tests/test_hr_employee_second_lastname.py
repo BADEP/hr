@@ -6,7 +6,7 @@ from odoo.tools.misc import submap
 class TestEmployeeSecondLastname(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "employee_names_order", "first_last"
         )
         self.employee_model = self.env["hr.employee"]
@@ -137,7 +137,7 @@ class TestEmployeeSecondLastname(TransactionCase):
         self.assertEqual(self.employee1_id.name, "Jean-Pierre Fernandez Carnaud")
 
     def test_change_lastname_with_set_last_first(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "employee_names_order", "last_first"
         )
         self.employee1_id.write({"lastname": "Lopez"})
@@ -146,7 +146,7 @@ class TestEmployeeSecondLastname(TransactionCase):
         self.assertEqual(self.employee1_id.name, "Lopez Gonzalez Manuel")
 
     def test_change_name_with_set_last_first(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "employee_names_order", "last_first"
         )
         self.employee1_id.write({"name": "Martinez Torres Pedro"})
@@ -164,7 +164,7 @@ class TestEmployeeSecondLastname(TransactionCase):
         self.assertEqual(self.employee1_id.lastname2, "Torres")
 
     def test_change_lastname_with_set_last_first_comma(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "employee_names_order", "last_first_comma"
         )
         self.employee1_id.write({"lastname": "Lopez"})

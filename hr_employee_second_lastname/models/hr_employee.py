@@ -19,7 +19,7 @@ class HrEmployee(models.Model):
     @api.model
     def _get_name_lastnames(self, lastname, firstname, lastname2=None):
         order = self._get_names_order()
-        names = list()
+        names = []
         if order == "first_last":
             if firstname:
                 names.append(firstname)
@@ -41,7 +41,7 @@ class HrEmployee(models.Model):
     def _prepare_vals_on_create_firstname_lastname(self, vals):
         values = vals.copy()
         res = super()._prepare_vals_on_create_firstname_lastname(values)
-        if any([field in vals for field in ("firstname", "lastname", "lastname2")]):
+        if any(field in vals for field in ("firstname", "lastname", "lastname2")):
             vals["name"] = self._get_name_lastnames(
                 vals.get("lastname"), vals.get("firstname"), vals.get("lastname2")
             )
@@ -55,19 +55,10 @@ class HrEmployee(models.Model):
     def _prepare_vals_on_write_firstname_lastname(self, vals):
         values = vals.copy()
         res = super()._prepare_vals_on_write_firstname_lastname(values)
-        if any([field in vals for field in ("firstname", "lastname", "lastname2")]):
-            if "lastname" in vals:
-                lastname = vals["lastname"]
-            else:
-                lastname = self.lastname
-            if "firstname" in vals:
-                firstname = vals["firstname"]
-            else:
-                firstname = self.firstname
-            if "lastname2" in vals:
-                lastname2 = vals["lastname2"]
-            else:
-                lastname2 = self.lastname2
+        if any(field in vals for field in ("firstname", "lastname", "lastname2")):
+            lastname = vals.get("lastname", self.lastname)
+            firstname = vals.get("firstname", self.firstname)
+            lastname2 = vals.get("lastname2", self.lastname2)
             vals["name"] = self._get_name_lastnames(lastname, firstname, lastname2)
         elif vals.get("name"):
             name_splitted = self.split_name(vals["name"])
