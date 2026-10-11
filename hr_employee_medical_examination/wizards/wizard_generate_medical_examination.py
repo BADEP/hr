@@ -1,8 +1,6 @@
 # Copyright 2019 Creu Blanca
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from datetime import date
-
 from odoo import fields, models
 
 
@@ -12,17 +10,15 @@ class WizardGenerateMedicalExamination(models.TransientModel):
 
     name = fields.Char(required=True, string="Examination Name")
     year = fields.Char(
-        default=lambda r: str(date.today().year),
+        default=lambda r: str(fields.Date.today().year),
     )
 
     employee_ids = fields.Many2many(comodel_name="hr.employee", string="Employees")
     department_id = fields.Many2one(
         comodel_name="hr.department",
-        string="Department",
     )
     job_id = fields.Many2one(
         comodel_name="hr.job",
-        string="Job",
     )
 
     def _prepare_employee_domain(self):
@@ -37,7 +33,7 @@ class WizardGenerateMedicalExamination(models.TransientModel):
         domain = self._prepare_employee_domain()
         employees = self.env["hr.employee"].search(domain)
         self.employee_ids = employees
-        action = {
+        return {
             "name": self.env._("Generate Medical Examinations"),
             "type": "ir.actions.act_window",
             "res_model": "wizard.generate.medical.examination",
@@ -46,7 +42,6 @@ class WizardGenerateMedicalExamination(models.TransientModel):
             "res_id": self.id,
             "context": self.env.context,
         }
-        return action
 
     def _create_examination_vals(self, employee):
         message = self.env._("%(name)s on %(employee)s")
