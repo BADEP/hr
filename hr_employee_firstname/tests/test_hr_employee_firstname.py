@@ -127,7 +127,7 @@ class TestEmployeeFirstname(TransactionCase):
         self.assertEqual(self.employee1_id.name, "Jean-Pierre Carnaud")
 
     def test_lastname_firstname(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "employee_names_order", "last_first"
         )
 
@@ -147,8 +147,11 @@ class TestEmployeeFirstname(TransactionCase):
 
     @odoo.tests.tagged("-at_install", "post_install")
     def test_update_name_post_install(self):
+        # Odoo 20: hr.employee_admin moved to demo data and is named after the
+        # demo admin partner ("Mitchell Admin") instead of "Administrator".
         empl_demo = self.env.ref("hr.employee_admin")
-        self.assertEqual(empl_demo.lastname, "Administrator")
+        self.assertEqual(empl_demo.firstname, "Mitchell")
+        self.assertEqual(empl_demo.lastname, "Admin")
 
     def test_no_name(self):
         self.env["hr.employee"].create({"firstname": "test"})
@@ -162,7 +165,7 @@ class TestEmployeeFirstname(TransactionCase):
             self.employee1_id.write({"firstname": "", "lastname": ""})
 
     def test_change_firstname_and_lastname_with_set_last_first_comma(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "employee_names_order", "last_first_comma"
         )
         self.employee1_id.write({"firstname": "Jean-Pierre", "lastname": "Carnaud"})
@@ -171,7 +174,7 @@ class TestEmployeeFirstname(TransactionCase):
         self.assertEqual(self.employee1_id.name, "Carnaud, Jean-Pierre")
 
     def test_change_name_with_space_with_set_last_first_comma(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "employee_names_order", "last_first_comma"
         )
         self.employee1_id.write({"name": "  Carnaud-Eyck,  Jean-Pierre"})

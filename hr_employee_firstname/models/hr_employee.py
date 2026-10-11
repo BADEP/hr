@@ -30,7 +30,7 @@ class HrEmployee(models.Model):
         return (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("employee_names_order", self._names_order_default())
+            .get_str("employee_names_order", self._names_order_default())
         )
 
     @api.model
