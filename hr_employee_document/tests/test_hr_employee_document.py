@@ -11,6 +11,8 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestHrEmployeeDocument(BaseCommon):
+    _test_user_groups = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -146,8 +148,8 @@ class TestHrEmployeeDocument(BaseCommon):
     @users("test-user-1")
     def test_compute_domain_coverage(self):
         domain = (
-            self.env["ir.rule"]
+            self.env["hr.employee"]
             .with_context(search_attachments_from_hr_employee=True)
-            ._compute_domain("hr.employee")
+            ._access_domain("read")
         )
         self.assertIsNotNone(domain)

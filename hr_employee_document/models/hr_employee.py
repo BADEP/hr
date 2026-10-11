@@ -23,21 +23,23 @@ class HrEmployee(models.Model):
         for record in self:
             record.document_count = count_dict.get(record.id, 0)
 
-    def _check_access(self, operation):
+    def _access_domain(self, operation):
         """Return access to the hr.employee model if we pass a specific context,
-        is a trick to list the attachments related to an employee."""
-        if (
-            not self.env.su
-            and not self.env.user.has_group("hr.group_hr_user")
-            and operation == "read"
-            and self._name == "hr.employee"
-        ):
-            if (
-                self.env.context.get("search_attachments_from_hr_employee")
-                or self in self.env.user.employee_ids
-            ):
-                return None
-        return super()._check_access(operation=operation)
+        is a trick to list the attachments related to an employee.
+        We also need to add for security purposes an extra domain in the hr.employee
+        model to restrict only the user's employees when search employee attachments."""
+        res = super()._access_domain(operation)
+        if self.env.su or operation != "read":
+            return res
+        user = self.env.user
+        own_employees = Domain("id", "in", user.employee_ids.ids)
+        if not user.has_group("hr.group_hr_user"):
+            res = res | own_employees
+        if self.env.context.get(
+            "search_attachments_from_hr_employee"
+        ) and not user.has_group("hr.group_hr_manager"):
+            res = own_employees & res
+        return res
 
     def action_get_attachment_tree_view(self):
         self.ensure_one()

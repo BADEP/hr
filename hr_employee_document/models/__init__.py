@@ -3,4 +3,4 @@
 from . import hr_employee
 from . import hr_employee_public
 from . import ir_attachment
-from . import ir_rule
+from . import ir_access
