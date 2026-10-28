@@ -1,15 +1,13 @@
 # Copyright 2019 Creu Blanca
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import datetime
-
 from odoo import api, fields, models
 
 
 class HrEmployeeMedicalExamination(models.Model):
     _name = "hr.employee.medical.examination"
     _description = "Employee Medical Examination"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin"]  # noqa: RUF012
 
     name = fields.Char(
         required=True,
@@ -39,12 +37,11 @@ class HrEmployeeMedicalExamination(models.Model):
 
     employee_id = fields.Many2one(
         "hr.employee",
-        string="Employee",
         required=True,
         tracking=True,
     )
 
-    year = fields.Char(default=lambda r: str(datetime.date.today().year))
+    year = fields.Char(default=lambda r: str(fields.Date.today().year))
 
     note = fields.Text(tracking=True)
 
