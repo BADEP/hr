@@ -1,15 +1,13 @@
 # Copyright 2019 Creu Blanca
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from typing import ClassVar
-
 from odoo import api, fields, models
 
 
 class HrEmployeeMedicalExamination(models.Model):
     _name = "hr.employee.medical.examination"
     _description = "Employee Medical Examination"
-    _inherit: ClassVar[list[str]] = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin"]  # noqa: RUF012
 
     name = fields.Char(
         required=True,
